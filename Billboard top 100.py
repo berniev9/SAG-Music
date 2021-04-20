@@ -21,36 +21,57 @@ def create_table(cur, conn):
     
 
 def billboard_soup(year, month, day):
-    cur, conn = setUpDatabase('GAS_MEDIA.db')  
-
-    create_table(cur, conn)
-
     partial_url = 'https://www.billboard.com/charts/hot-100/'
     updated_url = partial_url + str(year) + '-' + str(month) + '-' + str(day)
-
+    print(updated_url)
     r = requests.get(updated_url)
     if r.ok:
         soup = BeautifulSoup(r.content, 'html.parser')
+    empty_list = []
+    anchor = soup.find('ol', class_ = 'chart-list__elements')
+    anchor2 = anchor.find_all('li', class_ = 'chart-list__element display--flex')
+    for item in anchor2:
+        rank = item.find('span', class_ = 'chart-element__rank__number').get_text().strip()
+        song = item.find('span', class_ = 'chart-element__information__song text--truncate color--primary').get_text().strip()
+        artist = item.find('span', class_ = 'chart-element__information__artist text--truncate color--secondary').get_text().strip()
+        previous_rank = item.find('span', class_ = 'chart-element__meta text--center color--secondary text--last').get_text().strip()
+        peak_rank = item.find('span', class_ = 'chart-element__meta text--center color--secondary text--peak').get_text().strip()
+        wks_on_chart = item.find('span', class_ = 'chart-element__meta text--center color--secondary text--week').get_text().strip()
+        tup = (rank, song, artist, previous_rank, peak_rank, wks_on_chart)
+        empty_list.append(tup)
+    return empty_list
 
-    anchor = soup.find_all('col', class_ = 'chart-list__elements')
+
+def billboard_table(year, month, day):
+
+    cur, conn = setUpDatabase('GAS_MEDIA.db')
+
+    create_table(cur, conn)
+
+    billboard_data = billboard_soup(year, month, day)
+
     i = 0
     while i < 26:
-        for item in anchor:
-            rank = item.find('span', class_ = 'chart-element__rank__number')
-            song = item.find('span', class_ = 'chart-element__information__song text--truncate color--primary')
-            artist = item.find('span', class_ = 'chart-element__information__artist text--truncate color--secondary')
-            previous_rank = item.find('span', class_ = 'chart-element__meta text--center color--secondary text--last')
-            peak_rank = item.find('span', class_ = 'chart-element__meta text--center color--secondary text--peak')
-            wks_on_chart = item.find('span', class_ = 'chart-element__meta text--center color--secondary text--week')
-            print([rank, song, artist, previous_rank, peak_rank, wks_on_chart])
+        for item in billboard_data:
             cur.execute(f"SELECT Song FROM Billboard")
             rows = cur.fetchall()
+            song = item[1]
+            print(song)
             if song not in rows:
-                cur.execute("INSERT INTO Billboard (Rank, Song, Artist, Previous Rank, Peak Rank, Weeks on Charts) VALUES (?,?,?,?,?,?)",(rank,song,artist,previous_rank, peak_rank,wks_on_chart))
+                cur.execute("INSERT INTO Billboard (Rank, Song, Artist, Previous_Rank, Peak_Rank, Weeks_on_Charts) VALUES (?,?,?,?,?,?)",(item[0],item[1],item[2],item[3], item[4], item[5]))
+                i +=1
                 conn.commit()
-                i += 1
             else:
                 continue
 
-billboard_soup('2021', '04', '10')
+    
 
+
+def main():
+    #cur, conn = setUpDatabase('GAS_MEDIA.db')  
+    #create_table(cur, conn)
+    #print(billboard_soup('2021', '04', '10'))
+    billboard_table('2021', '04', '10')
+if __name__ == "__main__":
+    main()
+    
