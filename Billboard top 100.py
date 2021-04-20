@@ -1,3 +1,4 @@
+
 #this will use beautiful soup to scrape the billboard top 100 for the most popular songs world wide.
 
 from bs4 import BeautifulSoup
@@ -21,5 +22,3 @@ def billboard_soup(year, month, day):
             song = item.find('span', class_ = 'chart-element__information__song text--truncate color--primary')
             artist = item.find('span', class_ = 'chart-element__information__artist text--truncate color--secondary')
             previous_rank = item.find('span', class_ = 'chart-element__meta text--center color--secondary text--last')
-
-    
