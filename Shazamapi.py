@@ -77,10 +77,10 @@ def get_artistsand_appear(top_songs):
 
     return ranked
 
-def calculate_artist_frequency(artist_rank_list, length):
+def calculate_artist_frequency(artist_rank_list):
     dict = {}
     for art in artist_rank_list:
-        dict[art[0]] = art[1]/length
+        dict[art[0]] = art[1]/100
 
     return dict
 
@@ -90,29 +90,93 @@ def get_artist_pop_song(artist,US_top100):
         for art in song[1]:
             if artist == art:
                 return song[0]
-                # song = US_top100[song[2]]
-                # # return song[2]
 
 
-def create_table(cur,conn, dictionary, US_top):
-    cur.execute('DROP TABLE IF EXISTS Shazam')
-    cur.execute('CREATE TABLE IF NOT EXISTS Shazam (Rank INTEGER PRIMARY KEY, Artists TEXT, Most_Popular_Song TEXT, Frequency_the_artist_appears REAL)')
+def create_Shazam_table(cur,conn, US_top):
+    cur.execute('CREATE TABLE IF NOT EXISTS Shazam_Data (Rank_id INTEGER PRIMARY KEY, Song TEXT, Artists TEXT)')
+    start_id = None
+    cur.execute('SELECT max(Rank_id) FROM Shazam_Data')
+    try:
+        row = cur.fetchone()
+        if row is None:
+            start_id = 0
+        else:
+            start_id=row[0]
+    except:
+        start_id = 0
+    if start_id is None:
+        start_id = 0
+ 
+
+    count = 0
+    while count < 25: 
+        art = ''
+        for i in US_top[start_id][1]:
+            art = art + i + ', '
+        cur.execute("INSERT OR IGNORE INTO Shazam_Data (Rank_id, Song, Artists)  VALUES (?,?,?)", (int(US_top[start_id][2]),US_top[start_id][0], art))
+        conn.commit()
+        start_id+=1
+        count+=1
     conn.commit()
-    rank = 1
+
+
+
+
+
+def create_calculate_shazam_table(cur,conn, dictionary, US_top):
+    cur.execute('CREATE TABLE IF NOT EXISTS Shazam_calculated_data (Rank INTEGER PRIMARY KEY, Artist TEXT, Most_Popular_Song TEXT, Frequency_the_artist_appears REAL)')
+    start_id = None
+    cur.execute('SELECT max(Rank) FROM Shazam_calculated_data')
+    try:
+        row = cur.fetchone()
+        if row is None:
+            start_id = 0
+        else:
+            start_id=row[0]
+    except:
+        start_id = 0
+    if start_id is None:
+        start_id = 0
+ 
+    count = 0
+    key_list = []
     for key in dictionary.keys():
-        cur.execute("INSERT OR IGNORE INTO Shazam (Rank, Artists, Most_Popular_Song, Frequency_the_artist_appears)  VALUES (?,?,?,?)", (rank,key,get_artist_pop_song(key, US_top), dictionary[key]))
-        rank+=1
+        key_list.append(key)
+
+
+    # if start_id >=75:
+        # while count < len(dictionary):
+        #     print(start_id )
+        #     cur.execute("INSERT OR IGNORE INTO Shazam_calculated_data (Rank, Artist, Most_Popular_Song, Frequency_the_artist_appears)  VALUES (?,?,?,?)", (start_id+1,key_list[start_id],get_artist_pop_song(key_list[start_id], US_top), dictionary[key_list[start_id]]))
+        #     conn.commit()
+        #     start_id+=1
+        #     count+=1
+        # conn.commit()
+    # else:
+    while count < 25:
+        if start_id+1 != 100:
+            cur.execute("INSERT OR IGNORE INTO Shazam_calculated_data (Rank, Artist, Most_Popular_Song, Frequency_the_artist_appears)  VALUES (?,?,?,?)", (start_id+1,key_list[start_id],get_artist_pop_song(key_list[start_id], US_top), dictionary[key_list[start_id]]))
+            conn.commit()
+            start_id+=1
+            count+=1
+        else:
+            continue
     conn.commit()
+
 
 
 def main():
     US_100mostshazam_songs = top_100_songs('US')
     artist_rank = get_artistsand_appear(US_100mostshazam_songs)
-    frequency = calculate_artist_frequency(artist_rank, len(US_100mostshazam_songs))
+    frequency = calculate_artist_frequency(artist_rank)
     cur, conn = setUpDatabase('GAS_MEDIA.db')
-    create_table(cur, conn, frequency, US_100mostshazam_songs)
+    # cur.execute('DROP TABLE IF EXISTS Shazam_Data')
+    create_Shazam_table(cur, conn,US_100mostshazam_songs)
+    # cur.execute('DROP TABLE IF EXISTS Shazam_Data')
+    # cur.execute('DROP TABLE IF EXISTS Shazam_calculated_data')
+    create_calculate_shazam_table(cur,conn, frequency, US_100mostshazam_songs)
+    # cur.execute('DROP TABLE IF EXISTS Shazam_calculated_data')
 
-    # print(frequency)
 
 
 if __name__ == "__main__":
