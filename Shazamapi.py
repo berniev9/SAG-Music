@@ -12,7 +12,6 @@ def setUpDatabase(db_name):
     return cur, conn
 
 
-
 # def create_database(cur, conn,dictionary):
 #     cur.execute('DROP TABLE IF EXISTS Shazam datatable')
 #     # stuck on what I will put into the database city, .....
@@ -61,7 +60,7 @@ def get_artists(artists):
             new_list.append(follow['alias'])
         return new_list
     else:
-        new_list.append('Unknown')
+        new_list.append('Vedo')
         return new_list
 
 
@@ -86,10 +85,33 @@ def calculate_artist_frequency(artist_rank_list, length):
     return dict
 
 
+def get_artist_pop_song(artist,US_top100):
+    for song in US_top100:
+        for art in song[1]:
+            if artist == art:
+                return song[0]
+                # song = US_top100[song[2]]
+                # # return song[2]
+
+
+def create_table(cur,conn, dictionary, US_top):
+    cur.execute('DROP TABLE IF EXISTS Shazam')
+    cur.execute('CREATE TABLE IF NOT EXISTS Shazam (Rank INTEGER PRIMARY KEY, Artists TEXT, Most_Popular_Song TEXT, Frequency_the_artist_appears REAL)')
+    conn.commit()
+    rank = 1
+    for key in dictionary.keys():
+        cur.execute("INSERT OR IGNORE INTO Shazam (Rank, Artists, Most_Popular_Song, Frequency_the_artist_appears)  VALUES (?,?,?,?)", (rank,key,get_artist_pop_song(key, US_top), dictionary[key]))
+        rank+=1
+    conn.commit()
+
+
 def main():
     US_100mostshazam_songs = top_100_songs('US')
     artist_rank = get_artistsand_appear(US_100mostshazam_songs)
     frequency = calculate_artist_frequency(artist_rank, len(US_100mostshazam_songs))
+    cur, conn = setUpDatabase('GAS_MEDIA.db')
+    create_table(cur, conn, frequency, US_100mostshazam_songs)
+
     # print(frequency)
 
 
