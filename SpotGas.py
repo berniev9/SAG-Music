@@ -16,7 +16,7 @@ client_credentials_manager)
 
 # base URL of all Spotify API endpoints
 BASE_URL = 'https://api.spotify.com/v1/'
-Token = "BQA7QHe_r1s36_91gpMM8yPI2zI_FHwyut2LU88NDCkpWt81kaOcsCf7Gj4AAafJr_6PuBa1Zp3wkliwcIz0-hw8EWD3u5BvgDcOJfhMqeKZlb-kTWdxE6u_thDG7tLztqmLVbCfT7_M_V_G"
+Token = "BQCeV-JiD6R9rCNafsaflb72c7BouO1O3W8rEuAVhzZsURwo3LdJFoqCGBIonVAwmXyCXxwbHWj6t6UW7ggeA63wHvxDhtSzfW4ug7X9m4LDkYV2MLhj4rC7_0IJd6eC1o-TYyLOyBZa53oq"
 
 #FIND OUT HOW TO AUTHENTIC PERMANENT TOKEN!!!^^^^^^^^^^
 
@@ -47,17 +47,14 @@ def songsearchinfo(song):
     return(jdata)
 
 
-def songsearchgetid(song):
+def songsearchgetid(song, print = False):
     """Retrieves the artists' ID from the title of the song on the billboard 100 list"""
     
     searchresults = songsearchinfo(song)
-    selectedinfo = []
     artist = searchresults["tracks"]["items"][0]["artists"][0]["name"]
     artistid = searchresults["tracks"]["items"][0]["artists"][0]["id"]
-    for info in (artist, artistid):
-        selectedinfo.append(info)
-    print(selectedinfo)
-    print("Artist name - " + artist + ", Artist ID - " + artistid)
+    if print == True:
+        print("Artist name - " + artist + ", Artist ID - " + artistid)
     return artistid
 
 def songsearchgetpopularity(song):
@@ -89,11 +86,12 @@ def toptracksartistlist(song, market = "US"):
         topsongs.append((toptrackdata["tracks"][songrank]['name']))
     return topsongs
     
-def meanartistpopularity(song, market = "US"):
-    """Calculates the average popularity of the artist's top 10 songs""""
+def meanartistpopularity(song, market = "US", popularratings = False):
+    """Calculates the average popularity of the artist's top 10 songs and can print out Spotify popularity ratings for those songs"""
     topsongdata = toptracksartistdata(song, market)
-    for songrank in range(len(topsongdata["tracks"])):
-        print(topsongdata["tracks"][songrank]['popularity'])
+    if popularratings == True:
+        for songrank in range(len(topsongdata["tracks"])):
+            print(topsongdata["tracks"][songrank]['popularity'])
     popularities = []
     average = 0
     for songrank in range(len(topsongdata["tracks"])):
@@ -105,10 +103,17 @@ def meanartistpopularity(song, market = "US"):
 
 def breakoutsongforartist(song, market = "US"):
     """Determines if a song is a "Breakout Song" for the artist"""
-    if songsearchgetpopularity(song) >= meanartistpopularity(song):
-        return "This is a breakout song for the artist!"
-    else:
-        return "This artist is typically popular and this song follows suit!"
+    if meanartistpopularity(song) >= 65:
+        if songsearchgetpopularity(song)>=meanartistpopularity(song):
+            return "This artist is already popular, and this song is only adding to that!"
+        else:
+            return "This artist is popular, but this isn't even one of their hottest songs!"
+    if meanartistpopularity(song)<= 65:
+        if songsearchgetpopularity(song) >= meanartistpopularity(song):
+            return "This is a breakout song for the artist!"
+        else:
+            return "This song is just as good as their other top songs!"
 
 #get song from Jacob's beautsoup
-print(breakoutsongforartist("Tell Me Why (Taylor's Version)"))
+for item in ["Sweater Weather", "Tell Me Why (Taylor's Version)", "On Me", "Back in Blood", "deja vu"]:
+    print(breakoutsongforartist(item))
