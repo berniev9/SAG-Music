@@ -12,10 +12,27 @@ def setUpDatabase(db_name):
     return cur, conn
 
 
-def top_25songs_city(city_id):
-    url = "https://shazam-core.p.rapidapi.com/v1/charts/city"
 
-    querystring = {"city_id":city_id,"limit":"25"}
+# def create_database(cur, conn,dictionary):
+#     cur.execute('DROP TABLE IF EXISTS Shazam datatable')
+#     # stuck on what I will put into the database city, .....
+#     cur.execute('CREATE TABLE IF NOT EXISTS Shazam datatable ("City" TEXT PRIMARY KEY, "wins" INTEGER)')
+#     conn.commit()
+#     for key in dictionary.keys():
+#         cur.execute("INSERT OR IGNORE INTO tennis (name, wins)  VALUES (?,?)", (key, dictionary[key]))
+#     conn.commit()
+
+
+#     # cur, conn = setUpDatabase('Mainmusicdatabase.db')
+    
+
+
+
+def top_100_songs(Country_code):
+
+    url = "https://shazam-core.p.rapidapi.com/v1/charts/country"
+
+    querystring = {"country_code":Country_code,"limit":"100" }
 
     headers = {
         'x-rapidapi-key': "777245208fmshb0a2322bac9c61cp1109b4jsn583c58319591",
@@ -25,48 +42,55 @@ def top_25songs_city(city_id):
     response = requests.request("GET", url, headers=headers, params=querystring)
 
     data = response.text
-    dic_list = json.loads(data)
-
     # dict_keys(['id', 'type', 'layout', 'title', 'url', 'apple_music_url', 'subtitle', 'images', 'share', 'hub', 'artists'])
+    dic_list = json.loads(data)
     new_list = [] 
 
+    rank = 1
     for i in dic_list:
-        tuple = (i['title'], i['subtitle'])
+        tuple = (i['title'], get_artists(i['artists']), rank)
         new_list.append(tuple)
-
+        rank+=1
     return new_list
 
 
-def create_city_playlist(empty_dic, top_US_cities):
-    for city in top_US_cities.keys():
-        list = top_25songs_city(top_US_cities[city])
-        empty_dic[city] = list
+def get_artists(artists):
+    new_list = []
+    if artists != None:
+        for follow in artists:
+            new_list.append(follow['alias'])
+        return new_list
+    else:
+        new_list.append('Unknown')
+        return new_list
 
-    return empty_dic
 
+def get_artistsand_appear(top_songs):
+    artist_list = {}
+    for song in top_songs:
+        for art in song[1]:
+            if not art in artist_list.keys():
+                artist_list[art] = 1
+            else:
+                artist_list[art] = artist_list[art] + 1
 
-def create_database(cur, conn,dictionary):
-    cur.execute('DROP TABLE IF EXISTS Shazam datatable')
-    # stuck on what I will put into the database city, .....
-    cur.execute('CREATE TABLE IF NOT EXISTS Shazam datatable ("City" TEXT PRIMARY KEY, "wins" INTEGER)')
-    conn.commit()
-    for key in dictionary.keys():
-        cur.execute("INSERT OR IGNORE INTO tennis (name, wins)  VALUES (?,?)", (key, dictionary[key]))
-    conn.commit()
+    ranked = sorted(artist_list.items(),key= lambda t: t[1], reverse=True)
 
+    return ranked
+
+def calculate_artist_frequency(artist_rank_list, length):
+    dict = {}
+    for art in artist_rank_list:
+        dict[art[0]] = art[1]/length
+
+    return dict
 
 
 def main():
-
-    top_US_cities = { "Boston, Ma": "4930956" ,  "Chicago, Il": '4887398', "Las Vegas, Ne": "5506956", "Los Angeles, Ca" : "5368361", "Miami, Fl": "4164138","New York City, Ny": "5128581", "San Diego, Ca": "5391811", "San Francisco, Ca": "5391959","San Jose, Ca": "5392171", "Washington, DC": "4140963" }
-    city_playlist = {}
-    # Creates a dictionary that contains the city as the key , a playlist list as the value
-    # with the top 25 songs of that area, a tuple with artist and their song.city_playlist
-
-    # opinion are we looking at aritst or song, if we are doing artist
-    city_playlist = create_city_playlist(city_playlist, top_US_cities)
-    cur, conn = setUpDatabase('Mainmusicdatabase.db')
-    
+    US_100mostshazam_songs = top_100_songs('US')
+    artist_rank = get_artistsand_appear(US_100mostshazam_songs)
+    frequency = calculate_artist_frequency(artist_rank, len(US_100mostshazam_songs))
+    # print(frequency)
 
 
 if __name__ == "__main__":
