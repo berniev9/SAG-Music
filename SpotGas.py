@@ -16,9 +16,6 @@ client_credentials_manager)
 
 # base URL of all Spotify API endpoints
 BASE_URL = 'https://api.spotify.com/v1/'
-#https://api.spotify.com/v1/user/b0ffdb7013d2429d
-# SpotifyCharts ID from the URI - https://open.spotify.com/user/spotifycharts?si=b0ffdb7013d2429d
-#spotifycharts_id = 'b0ffdb7013d2429d'
 Token = "BQA7QHe_r1s36_91gpMM8yPI2zI_FHwyut2LU88NDCkpWt81kaOcsCf7Gj4AAafJr_6PuBa1Zp3wkliwcIz0-hw8EWD3u5BvgDcOJfhMqeKZlb-kTWdxE6u_thDG7tLztqmLVbCfT7_M_V_G"
 
 #FIND OUT HOW TO AUTHENTIC PERMANENT TOKEN!!!^^^^^^^^^^
@@ -47,12 +44,11 @@ def songsearchinfo(song):
 
     data = response.text
     jdata = json.loads(data)
-    #print(jdata)
     return(jdata)
 
 
 def songsearchgetid(song):
-    """Retrieves the artists' id from the title of the song on the billboard 100 list"""
+    """Retrieves the artists' ID from the title of the song on the billboard 100 list"""
     
     searchresults = songsearchinfo(song)
     selectedinfo = []
@@ -67,36 +63,34 @@ def songsearchgetid(song):
 def songsearchgetpopularity(song):
     """Retrieves the popularity of a song"""
     searchresults = songsearchinfo(song)
-    #print(searchresults["tracks"]["items"][0]["popularity"])
     popularity = searchresults["tracks"]["items"][0]["popularity"]
     return popularity
 
 def toptracksartistdata(song, market = "US"):
-    """Returns the top tracks of the artist of the inputted song"""
+    """Returns the top tracks of the artist of the inputted song in the form of JSON data"""
     artistid = songsearchgetid(song)
 
-    url = "https://api.spotify.com/v1/artists/"#{id}/top-tracks"
-    #queryparameters = {"{id}":artistid,"market":"US"}
-
+    url = "https://api.spotify.com/v1/artists/"
+    
     Headers =  {
         'Authorization': 'Bearer {token}'.format(token=Token)
         }
 
-    response = requests.request("GET", url + str(artistid) + "/top-tracks?market=" + market, headers=Headers)#, params=queryparameters)
+    response = requests.request("GET", url + str(artistid) + "/top-tracks?market=" + market, headers=Headers)
     data = response.text
     jdata = json.loads(data)
     return jdata
 
 def toptracksartistlist(song, market = "US"):
+    """Returns a list of the top 10 songs from the same artist who made another song"""
     toptrackdata = toptracksartistdata(song, market)
     topsongs = []
-    #returns top songs
     for songrank in range(len(toptrackdata["tracks"])):
         topsongs.append((toptrackdata["tracks"][songrank]['name']))
     return topsongs
     
 def meanartistpopularity(song, market = "US"):
-    #prints out popularity
+    """Calculates the average popularity of the artist's top 10 songs""""
     topsongdata = toptracksartistdata(song, market)
     for songrank in range(len(topsongdata["tracks"])):
         print(topsongdata["tracks"][songrank]['popularity'])
@@ -104,21 +98,17 @@ def meanartistpopularity(song, market = "US"):
     average = 0
     for songrank in range(len(topsongdata["tracks"])):
         popularities.append((topsongdata["tracks"][songrank]['popularity']))
-    #print(popularities)
     for popularity in popularities:
         average += popularity
-    #print(average)
     average= average/len(popularities)
-    #print(average)
     return average
 
 def breakoutsongforartist(song, market = "US"):
-    #DETERMINE IF SONG IS MORE POPULAR THAN AVERAGE"""
+    """Determines if a song is a "Breakout Song" for the artist"""
     if songsearchgetpopularity(song) >= meanartistpopularity(song):
         return "This is a breakout song for the artist!"
     else:
         return "This artist is typically popular and this song follows suit!"
+
 #get song from Jacob's beautsoup
-#breakoutsongforartist("No Hands")
-#print(songsearchgetid("I'll Find You"))
 print(breakoutsongforartist("Tell Me Why (Taylor's Version)"))
