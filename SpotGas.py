@@ -16,7 +16,7 @@ client_credentials_manager)
 
 # base URL of all Spotify API endpoints
 BASE_URL = 'https://api.spotify.com/v1/'
-Token = "BQBdvGYiTT90gJespKmrp45S4qnR5yz3rrj48org0t2roCJQ3J-gREbO8BMbH-SdtI5ftMYH6gllwjmtTeCXBDaboY338F14k2baCJgBXbaWDYvfzUf90U9v_z-7XaqRgSwdOsmyj4VPir-S"
+Token = "BQBTZhswo0NdM-hx1pB3oxiNhep5sUzDPorWzL9FLlpyUMKoLv6Ihl7QT7vLW-Zb9T5mE0JgJvvDk7SDHOEjb_wKDP-xJSfuoNRv1VdTYo-uK6C3f5zEQvxV0OopyIlurNdmvatfDKAldxc9"
 
 #FIND OUT HOW TO AUTHENTIC PERMANENT TOKEN!!!^^^^^^^^^^
 
@@ -46,15 +46,19 @@ def songsearchinfo(song):
     jdata = json.loads(data)
     return(jdata)
 
+def songsearchgetartist(song):
+    """Retrieves the artist name from the song on the billboard 100 list"""
 
-def songsearchgetid(song, print = False):
+    searchresults = songsearchinfo(song)
+    artist = searchresults["tracks"]["items"][0]["artists"][0]["name"]
+    return artist
+
+def songsearchgetid(song):
     """Retrieves the artists' ID from the title of the song on the billboard 100 list"""
     
     searchresults = songsearchinfo(song)
-    artist = searchresults["tracks"]["items"][0]["artists"][0]["name"]
+    artist = songsearchgetartist(song)
     artistid = searchresults["tracks"]["items"][0]["artists"][0]["id"]
-    if print == True:
-        print("Artist name - " + artist + ", Artist ID - " + artistid)
     return artistid
 
 def songsearchgetpopularity(song):
@@ -115,5 +119,5 @@ def breakoutsongforartist(song, market = "US"):
             return "This song is just as good as their other top songs!"
 
 #get song from Jacob's beautsoup
-for item in ["Sweater Weather", "Tell Me Why (Taylor's Version)", "On Me", "Back in Blood", "deja vu"]:
-    print(breakoutsongforartist(item))
+#for item in ["Sweater Weather", "Tell Me Why (Taylor's Version)", "On Me", "Back in Blood", "deja vu"]:
+    #print(breakoutsongforartist(item))
