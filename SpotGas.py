@@ -16,7 +16,7 @@ client_credentials_manager)
 
 # base URL of all Spotify API endpoints
 BASE_URL = 'https://api.spotify.com/v1/'
-Token = "BQCeV-JiD6R9rCNafsaflb72c7BouO1O3W8rEuAVhzZsURwo3LdJFoqCGBIonVAwmXyCXxwbHWj6t6UW7ggeA63wHvxDhtSzfW4ug7X9m4LDkYV2MLhj4rC7_0IJd6eC1o-TYyLOyBZa53oq"
+Token = "BQBdvGYiTT90gJespKmrp45S4qnR5yz3rrj48org0t2roCJQ3J-gREbO8BMbH-SdtI5ftMYH6gllwjmtTeCXBDaboY338F14k2baCJgBXbaWDYvfzUf90U9v_z-7XaqRgSwdOsmyj4VPir-S"
 
 #FIND OUT HOW TO AUTHENTIC PERMANENT TOKEN!!!^^^^^^^^^^
 
@@ -27,7 +27,7 @@ def setUpDatabase(db_name): #should be good
     return cur, conn
 
 def create_table(cur, conn): #needs adjustments
-    cur.execute('CREATE TABLE IF NOT EXISTS Spotify (Song TEXT, Artist Text') #add more columns on table
+    cur.execute('CREATE TABLE IF NOT EXISTS Spotify (Song TEXT, Artist Text, Popularity Integer Popularity_Status Integer') #Popularity Status is 1-4 and synonymous with __calculatedbreakout__ in doc plan
     conn.commit()
 
 def songsearchinfo(song):
