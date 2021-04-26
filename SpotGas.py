@@ -32,19 +32,8 @@ def create_table(cur, conn): #needs adjustments
 
 def songsearchinfo(song):
     """Returns JSON song search data from Spotify"""
-    url = "https://api.spotify.com/v1/search"
-
-    queryparameters = {"q":song,"type":"track","limit":"5"}
-
-    Headers =  {
-        'Authorization': 'Bearer {token}'.format(token=Token)
-        }
-    
-    response = requests.request("GET", url, headers=Headers, params=queryparameters)
-
-    data = response.text
-    jdata = json.loads(data)
-    return(jdata)
+    data = sp.search(song)
+    return(data)
 
 def songsearchgetartist(song):
     """Retrieves the artist name from the song on the billboard 100 list"""
