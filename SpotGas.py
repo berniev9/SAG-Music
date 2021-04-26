@@ -20,8 +20,10 @@ def setUpDatabase(db_name): #should be good
     cur = conn.cursor()
     return cur, conn
 
-def create_Spotify_table(cur, conn, data): #needs adjustments - data is based off a for loop that calls combinedata() for each song in Jacob's top 100
-    cur.execute('CREATE TABLE IF NOT EXISTS Spotify (Song TEXT, Artist Text, Popularity Integer, Popularity_Status Integer)') #Popularity Status is 1-4 and synonymous with __calculatedbreakout__ in doc plan
+def create_Spotify_table(cur, conn): #needs adjustments - data is based off a for loop that calls combinedata() for each song in Jacob's top 100
+    cur.execute('CREATE TABLE IF NOT EXISTS Spotify (Song TEXT, Artist TEXT, Popularity INTEGER, Popularity_Status INTEGER)') #Popularity Status is 1-4 and synonymous with __calculatedbreakout__ in doc plan
+    conn.commit()
+
     tableid = None
     cur.execute('SELECT max(Popularity_Status) FROM Spotify')
     try:
@@ -35,12 +37,19 @@ def create_Spotify_table(cur, conn, data): #needs adjustments - data is based of
     if tableid is None:
         tableid = 0
     
+    cur.execute("SELECT Song FROM Billboard")
+    songdata = []
+    rows = cur.fetchall()
     count = 0
-    while count < 25:
-        cur.execute("INSERT OR IGNORE INTO SPOTIFY (Song, Artist, Popularity, Popularity_Status) VALUES (?, ?, ?, ?)", data)
-        conn.commit()
-        tableid += 1
+    for item in rows[tableid:]:
+        songdata.append(combinedata(item[0]))
         count += 1
+        if count == 25:
+            break
+
+    for item in songdata:
+        cur.execute("INSERT INTO SPOTIFY (Song, Artist, Popularity, Popularity_Status) VALUES (?, ?, ?, ?)", (item))
+        conn.commit()
     conn.commit()
 
 def songsearchinfo(song):
@@ -129,12 +138,9 @@ def combinedata(song):
 print(combinedata("Astronaut in the ocean")) #prints out an example of the data to pass into database
 
 
+
 def main(): #does song get passed into main?
-    songdata = [] #Needs to get song from Jacob
-    for item in ["Sweater Weather", "Tell Me Why (Taylor's Version)", "On Me", "Back in Blood", "deja vu"]:
-        songdata.append(combinedata(item))
-    cur, conn = setUpDatabase("testdatabasespotgas.db") #not sure
-    create_Spotify_table(cur, conn, songdata)
-    #get song from Jacob's beautsoup
+    cur, conn = setUpDatabase("GAS_MEDIA.db")
+    create_Spotify_table(cur, conn)
 if __name__ == "__main__":
     main()
