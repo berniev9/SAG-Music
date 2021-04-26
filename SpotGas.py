@@ -135,7 +135,6 @@ def combinedata(song):
         breakout = 4
     datatup = (song, artist, popularity, breakout)
     return datatup
-print(combinedata("Astronaut in the ocean")) #prints out an example of the data to pass into database
 
 
 
