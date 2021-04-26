@@ -51,19 +51,32 @@ def billboard_table(year, month, day):
     billboard_data = billboard_soup(year, month, day)
 
     i = 0
-    while i < 26:
-        for item in billboard_data:
-            cur.execute(f"SELECT Song FROM Billboard")
-            rows = cur.fetchall()
-            song = item[1]
-            print(song)
-            if song not in rows:
-                cur.execute("INSERT INTO Billboard (Rank, Song, Artist, Previous_Rank, Peak_Rank, Weeks_on_Charts) VALUES (?,?,?,?,?,?)",(item[0],item[1],item[2],item[3], item[4], item[5]))
-                i +=1
-                conn.commit()
-            else:
-                continue
 
+    #Bernies solution for entering 25 at a time
+    start_id = None
+    cur.execute('SELECT max(rank) FROM Billboard')
+    try:
+        row = cur.fetchone()
+        if row is None:
+            start_id = 0
+        else:
+            start_id=row[0]
+    except:
+        start_id = 0
+    if start_id is None:
+        start_id = 0
+
+
+    for item in billboard_data[start_id:]:
+        #cur.execute(f"SELECT Song FROM Billboard")
+        #rows = cur.fetchall()
+        #song = item[1]
+        #if song not in rows:
+        cur.execute("INSERT INTO Billboard (Rank, Song, Artist, Previous_Rank, Peak_Rank, Weeks_on_Charts) VALUES (?,?,?,?,?,?)",(item[0],item[1].upper(),item[2],item[3], item[4], item[5]))
+        i +=1
+        conn.commit()
+        if i == 25:
+            break
     
 
 

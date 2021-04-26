@@ -21,11 +21,11 @@ def setUpDatabase(db_name): #should be good
     return cur, conn
 
 def create_Spotify_table(cur, conn): #needs adjustments - data is based off a for loop that calls combinedata() for each song in Jacob's top 100
-    cur.execute('CREATE TABLE IF NOT EXISTS Spotify (Song TEXT, Artist TEXT, Popularity INTEGER, Popularity_Status INTEGER)') #Popularity Status is 1-4 and synonymous with __calculatedbreakout__ in doc plan
+    cur.execute('CREATE TABLE IF NOT EXISTS Spotify (Rank INTEGER, Song TEXT, Artist TEXT, Popularity INTEGER, Popularity_Status INTEGER)') #Popularity Status is 1-4 and synonymous with __calculatedbreakout__ in doc plan
     conn.commit()
 
     tableid = None
-    cur.execute('SELECT max(Popularity_Status) FROM Spotify')
+    cur.execute('SELECT max(Rank) FROM Spotify')
     try:
         row = cur.fetchone()
         if row is None:
@@ -37,6 +37,8 @@ def create_Spotify_table(cur, conn): #needs adjustments - data is based off a fo
     if tableid is None:
         tableid = 0
     
+    rank = tableid + 1
+
     cur.execute("SELECT Song FROM Billboard")
     songdata = []
     rows = cur.fetchall()
@@ -48,8 +50,13 @@ def create_Spotify_table(cur, conn): #needs adjustments - data is based off a fo
             break
 
     for item in songdata:
-        cur.execute("INSERT INTO SPOTIFY (Song, Artist, Popularity, Popularity_Status) VALUES (?, ?, ?, ?)", (item))
+        song = item[0].upper()
+        artist = item[1]
+        popularity = item[2]
+        popularity_status = item[3]
+        cur.execute("INSERT INTO SPOTIFY (Rank, Song, Artist, Popularity, Popularity_Status) VALUES (?, ?, ?, ?, ?)", (rank, song, artist, popularity, popularity_status))
         conn.commit()
+        rank += 1
     conn.commit()
 
 def songsearchinfo(song):

@@ -129,7 +129,7 @@ def create_Shazam_table(cur,conn, US_top100):
         for i in US_top100[start_id][1]:
             art = art + i + ', '
         # Inserts one at a time the Rank, Song, and Artists in the song
-        cur.execute("INSERT OR IGNORE INTO Shazam_Data (Rank_of_song, Song, Artists)  VALUES (?,?,?)", (int(US_top100[start_id][2]),US_top100[start_id][0], art))
+        cur.execute("INSERT OR IGNORE INTO Shazam_Data (Rank_of_song, Song, Artists)  VALUES (?,?,?)", (int(US_top100[start_id][2]),US_top100[start_id][0].upper(), art))
         conn.commit()
         start_id+=1
         count+=1
