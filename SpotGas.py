@@ -4,6 +4,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import json
 import sqlite3
 import unittest
+import os
 
 #log in credentials
 cid = '2d7d29fc683a48b7849fb37a344f32a0'
@@ -13,21 +14,42 @@ sp = spotipy.Spotify(client_credentials_manager
 =
 client_credentials_manager)
 
-
-# base URL of all Spotify API endpoints
-BASE_URL = 'https://api.spotify.com/v1/'
-Token = "BQBTZhswo0NdM-hx1pB3oxiNhep5sUzDPorWzL9FLlpyUMKoLv6Ihl7QT7vLW-Zb9T5mE0JgJvvDk7SDHOEjb_wKDP-xJSfuoNRv1VdTYo-uK6C3f5zEQvxV0OopyIlurNdmvatfDKAldxc9"
-
-#FIND OUT HOW TO AUTHENTIC PERMANENT TOKEN!!!^^^^^^^^^^
-
 def setUpDatabase(db_name): #should be good
     path = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(path+'/'+db_name)
     cur = conn.cursor()
     return cur, conn
 
-def create_table(cur, conn): #needs adjustments
-    cur.execute('CREATE TABLE IF NOT EXISTS Spotify (Song TEXT, Artist Text, Popularity Integer Popularity_Status Integer') #Popularity Status is 1-4 and synonymous with __calculatedbreakout__ in doc plan
+def create_Spotify_table(cur, conn): #needs adjustments - data is based off a for loop that calls combinedata() for each song in Jacob's top 100
+    cur.execute('CREATE TABLE IF NOT EXISTS Spotify (Song TEXT, Artist TEXT, Popularity INTEGER, Popularity_Status INTEGER)') #Popularity Status is 1-4 and synonymous with __calculatedbreakout__ in doc plan
+    conn.commit()
+
+    tableid = None
+    cur.execute('SELECT max(Popularity_Status) FROM Spotify')
+    try:
+        row = cur.fetchone()
+        if row is None:
+            tableid = 0
+        else:
+            tableid = row[0]
+    except:
+        tableid = 0
+    if tableid is None:
+        tableid = 0
+    
+    cur.execute("SELECT Song FROM Billboard")
+    songdata = []
+    rows = cur.fetchall()
+    count = 0
+    for item in rows[tableid:]:
+        songdata.append(combinedata(item[0]))
+        count += 1
+        if count == 25:
+            break
+
+    for item in songdata:
+        cur.execute("INSERT INTO SPOTIFY (Song, Artist, Popularity, Popularity_Status) VALUES (?, ?, ?, ?)", (item))
+        conn.commit()
     conn.commit()
 
 def songsearchinfo(song):
@@ -59,17 +81,8 @@ def songsearchgetpopularity(song):
 def toptracksartistdata(song, market = "US"):
     """Returns the top tracks of the artist of the inputted song in the form of JSON data"""
     artistid = songsearchgetid(song)
-
-    url = "https://api.spotify.com/v1/artists/"
-    
-    Headers =  {
-        'Authorization': 'Bearer {token}'.format(token=Token)
-        }
-
-    response = requests.request("GET", url + str(artistid) + "/top-tracks?market=" + market, headers=Headers)
-    data = response.text
-    jdata = json.loads(data)
-    return jdata
+    toptracks = sp.artist_top_tracks(artistid, market)
+    return toptracks
 
 def toptracksartistlist(song, market = "US"):
     """Returns a list of the top 10 songs from the same artist who made another song"""
@@ -107,6 +120,27 @@ def breakoutsongforartist(song, market = "US"):
         else:
             return "This song is just as good as their other top songs!"
 
-#get song from Jacob's beautsoup
-#for item in ["Sweater Weather", "Tell Me Why (Taylor's Version)", "On Me", "Back in Blood", "deja vu"]:
-    #print(breakoutsongforartist(item))
+def combinedata(song):
+    """Combines data of song for storage in database. 1 represents a breakout song, 2 represents a new popular song by a popular artist, 3 represents a popular"""
+    song = song
+    artist = songsearchgetartist(song)
+    popularity = songsearchgetpopularity(song)
+    if breakoutsongforartist(song) == "This is a breakout song for the artist!":
+        breakout = 1
+    elif breakoutsongforartist(song) == "This artist is already popular, and this song is only adding to that!":
+        breakout = 2
+    elif breakoutsongforartist(song) == "This artist is popular, but this isn't even one of their hottest songs!":
+        breakout = 3
+    elif breakoutsongforartist(song) == "This song is just as good as their other top songs!":
+        breakout = 4
+    datatup = (song, artist, popularity, breakout)
+    return datatup
+print(combinedata("Astronaut in the ocean")) #prints out an example of the data to pass into database
+
+
+
+def main(): #does song get passed into main?
+    cur, conn = setUpDatabase("GAS_MEDIA.db")
+    create_Spotify_table(cur, conn)
+if __name__ == "__main__":
+    main()
