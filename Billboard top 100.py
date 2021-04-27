@@ -42,9 +42,9 @@ def billboard_soup(year, month, day):
     return empty_list
 
 
-def billboard_table(year, month, day):
+def billboard_table(year, month, day, db_name):
 
-    cur, conn = setUpDatabase('GAS_MEDIA.db')
+    cur, conn = setUpDatabase(db_name)
 
     create_table(cur, conn)
 
@@ -84,7 +84,7 @@ def main():
     #cur, conn = setUpDatabase('GAS_MEDIA.db')  
     #create_table(cur, conn)
     #print(billboard_soup('2021', '04', '10'))
-    billboard_table('2021', '04', '10')
+    billboard_table('2021', '04', '10', 'GAS_MEDIA.db')
 if __name__ == "__main__":
     main()
     
