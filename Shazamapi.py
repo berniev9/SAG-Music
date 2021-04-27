@@ -185,9 +185,6 @@ def main():
     # Creates a connection to the databse 
     cur, conn = setUpDatabase('GAS_MEDIA.db')
     # Adds API info onto the database
-    # cur.execute("DROP TABLE IF EXISTS Shazam_Data")
-    # cur.execute("DROP TABLE IF EXISTS Shazam_calculated_data")
-    # Adds API info onto the database
     create_Shazam_table(cur, conn,US_100mostshazam_songs)
     # Adds calculated info onto the database
     create_calculate_shazam_table(cur,conn, frequency, US_100mostshazam_songs)
