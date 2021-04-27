@@ -26,9 +26,9 @@ def dataprocess(cur, conn):
     ranking_list.sort(key = lambda x: x[1])
     return ranking_list
 
-def writetotext(cur, conn):
+def writetotext(cur, conn, text_name):
     data = dataprocess(cur, conn)
-    with open('ProcessedData.txt', 'w') as f:
+    with open(text_name, 'w') as f:
         f.write('Below is the average "popularity" out of 100 total of a song between Spotify, Billboard, and Shazam.')
         f.write('\n')
         f.write('A value of one is the most popular and a value of 100 is the least popular.')
@@ -41,6 +41,6 @@ def writetotext(cur, conn):
 
 def main():
     cur, conn = setUpDatabase('GAS_MEDIA.db')
-    writetotext(cur, conn)
+    writetotext(cur, conn, 'ProcessedData.txt')
 if __name__ == "__main__":
     main()
