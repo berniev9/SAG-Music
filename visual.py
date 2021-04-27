@@ -31,7 +31,7 @@ def grabs_shazam_data(cur, conn):
             new_dic[song[3]]+=1
 
     data = sorted(new_dic.items(),key= lambda t: t[1], reverse=True)
-
+    print(data)
     return data
 
 # Creates the main shazam visual
@@ -102,6 +102,28 @@ def create_shazam_artist_table(keys,ranks, values):
 
     fig.show()
 
+#Billboard Visual:
+
+def billboardvisual(cur, conn):
+    cur.execute('SELECT Rank, Previous_Rank, Weeks_on_Charts FROM Billboard')
+    rows = cur.fetchall()
+    rank = []
+    previous = []
+    weeks = []
+    for row in rows:
+        rank.append(row[0])
+        previous.append(row[1])
+        weeks.append(row[2])
+    previous = [0 if i=='-' else i for i in previous]
+    fig=plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    ax.scatter(rank, previous, weeks, zdir='z', s=20, c=None, depthshade=True)
+    ax.set_xlabel('Rank')
+    ax.set_ylabel('Previous Rank')
+    ax.set_zlabel('Weeks on Chart')
+    
+    plt.show()
+    
 
 def main():
     # Shazam visualization
@@ -111,6 +133,7 @@ def main():
     create_shazam_visual(frequency_count)
     create_shazam_artist_table(key_list, rank_list, value_list)
     creates_shazam_2nd_visual(value_list, rank_list)
+    billboardvisual(cur, conn)
 
 
 if __name__ == "__main__":
