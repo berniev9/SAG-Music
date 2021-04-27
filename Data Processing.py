@@ -29,10 +29,12 @@ def dataprocess(cur, conn):
 def writetotext(cur, conn):
     data = dataprocess(cur, conn)
     with open('ProcessedData.txt', 'w') as f:
-        f.write('Below is the average "popularity" out of 100 total of a song between Spotify, Billboard, and Shazam')
+        f.write('Below is the average "popularity" out of 100 total of a song between Spotify, Billboard, and Shazam.')
+        f.write('\n')
+        f.write('A value of one is the most popular and a value of 100 is the least popular.')
         for item in data:
             f.write('\n')
-            f.write(f"{item[0]} has a mean popularity of {item[1]}")
+            f.write(f"{item[0]} ---- {item[1]}")
         
             
         

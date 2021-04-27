@@ -1,49 +1,50 @@
-Below is the average "popularity" out of 100 total of a song between Spotify, Billboard, and Shazam
-PEACHES has a mean popularity of 2
-LEAVE THE DOOR OPEN has a mean popularity of 3
-DRIVERS LICENSE has a mean popularity of 6
-SAVE YOUR TEARS has a mean popularity of 6
-ASTRONAUT IN THE OCEAN has a mean popularity of 6
-MONTERO (CALL ME BY YOUR NAME) has a mean popularity of 10
-CALLING MY PHONE has a mean popularity of 11
-LEVITATING has a mean popularity of 13
-UP has a mean popularity of 14
-HEARTBREAK ANNIVERSARY has a mean popularity of 14
-WHAT YOU KNOW BOUT LOVE has a mean popularity of 16
-WITHOUT YOU has a mean popularity of 16
-BEST FRIEND has a mean popularity of 17
-BEAUTIFUL MISTAKES has a mean popularity of 18
-WANTS AND NEEDS has a mean popularity of 21
-MY EX'S BEST FRIEND has a mean popularity of 22
-BLINDING LIGHTS has a mean popularity of 25
-BACK IN BLOOD has a mean popularity of 25
-BEAT BOX has a mean popularity of 25
-TRACK STAR has a mean popularity of 26
-WHAT'S NEXT has a mean popularity of 27
-GO CRAZY has a mean popularity of 28
-MOOD has a mean popularity of 29
-ON ME has a mean popularity of 29
-WE'RE GOOD has a mean popularity of 29
-HEAT WAVES has a mean popularity of 30
-THEREFORE I AM has a mean popularity of 32
-GOOD DAYS has a mean popularity of 32
-PUT YOUR RECORDS ON has a mean popularity of 32
-THE GOOD ONES has a mean popularity of 33
-FOREVER AFTER ALL has a mean popularity of 36
-TOMBSTONE has a mean popularity of 39
-FOR THE NIGHT has a mean popularity of 42
-QUICKSAND has a mean popularity of 44
-STREETS has a mean popularity of 45
-CRY BABY has a mean popularity of 45
-TIME TODAY has a mean popularity of 45
-THE BUSINESS has a mean popularity of 45
-MASTERPIECE has a mean popularity of 47
-HOLD ON has a mean popularity of 49
-WILLOW has a mean popularity of 50
-DAMAGE has a mean popularity of 53
-BREAKING UP WAS EASY IN THE 90'S has a mean popularity of 57
-MADE FOR YOU has a mean popularity of 57
-YOU GOT IT has a mean popularity of 57
-PICK UP YOUR FEELINGS has a mean popularity of 59
-LA NOCHE DE ANOCHE has a mean popularity of 60
-ONE TOO MANY has a mean popularity of 68
+Below is the average "popularity" out of 100 total of a song between Spotify, Billboard, and Shazam.
+A value of one is the most popular and a value of 100 is the least popular.
+PEACHES ---- 2
+LEAVE THE DOOR OPEN ---- 3
+DRIVERS LICENSE ---- 6
+SAVE YOUR TEARS ---- 6
+ASTRONAUT IN THE OCEAN ---- 6
+MONTERO (CALL ME BY YOUR NAME) ---- 10
+CALLING MY PHONE ---- 11
+LEVITATING ---- 13
+UP ---- 14
+HEARTBREAK ANNIVERSARY ---- 14
+WHAT YOU KNOW BOUT LOVE ---- 16
+WITHOUT YOU ---- 16
+BEST FRIEND ---- 17
+BEAUTIFUL MISTAKES ---- 18
+WANTS AND NEEDS ---- 21
+MY EX'S BEST FRIEND ---- 22
+BLINDING LIGHTS ---- 25
+BACK IN BLOOD ---- 25
+BEAT BOX ---- 25
+TRACK STAR ---- 26
+WHAT'S NEXT ---- 27
+GO CRAZY ---- 28
+MOOD ---- 29
+ON ME ---- 29
+WE'RE GOOD ---- 29
+HEAT WAVES ---- 30
+THEREFORE I AM ---- 32
+GOOD DAYS ---- 32
+PUT YOUR RECORDS ON ---- 32
+THE GOOD ONES ---- 33
+FOREVER AFTER ALL ---- 36
+TOMBSTONE ---- 39
+FOR THE NIGHT ---- 42
+QUICKSAND ---- 44
+STREETS ---- 45
+CRY BABY ---- 45
+TIME TODAY ---- 45
+THE BUSINESS ---- 45
+MASTERPIECE ---- 47
+HOLD ON ---- 49
+WILLOW ---- 50
+DAMAGE ---- 53
+BREAKING UP WAS EASY IN THE 90'S ---- 57
+MADE FOR YOU ---- 57
+YOU GOT IT ---- 57
+PICK UP YOUR FEELINGS ---- 59
+LA NOCHE DE ANOCHE ---- 60
+ONE TOO MANY ---- 68
