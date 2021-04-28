@@ -17,11 +17,7 @@ sp = spotipy.Spotify(client_credentials_manager
 =
 client_credentials_manager)
 
-# def setUpDatabase(db_name): #should be good
-#     path = os.path.dirname(os.path.abspath(__file__))
-#     conn = sqlite3.connect(path+'/'+db_name)
-#     cur = conn.cursor()
-#     return cur, conn
+
 
 def create_Spotify_table(cur, conn): #needs adjustments - data is based off a for loop that calls combinedata() for each song in Jacob's top 100
     cur.execute('CREATE TABLE IF NOT EXISTS Spotify (Rank INTEGER, Song TEXT, Artist TEXT, Popularity INTEGER, Popularity_Status INTEGER)') #Popularity Status is 1-4 and synonymous with __calculatedbreakout__ in doc plan
@@ -148,8 +144,3 @@ def combinedata(song):
 
 
 
-# def main(): #does song get passed into main?
-#     cur, conn = setUpDatabase("GAS_MEDIA.db")
-#     create_Spotify_table(cur, conn)
-# if __name__ == "__main__":
-#     main()

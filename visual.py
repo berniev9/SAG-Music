@@ -60,8 +60,8 @@ def create_shazam_visual(data):
                 textposition='auto',
             )],layout=layout1)
 
-    # path = os.path.dirname(os.path.abspath(__file__))
-    # fig.write_image(os.path.join(path, "Shazam_visual.png")) 
+    path = os.path.dirname(os.path.abspath(__file__))
+    fig.write_image(os.path.join(path, "Shazam_visual.png")) 
     fig.show()
 
 
@@ -91,7 +91,7 @@ def creates_shazam_2nd_visual(values, ranks):
     ax.set_ylabel('Frequency')
     ax.set_title('Frequency of artitst on the top 100 Most Shazamed songs')
 
-    fig.savefig('Shazam_visual.png')
+    fig.savefig('Shazam2nd_visual.png')
 
     plt.show()
 
