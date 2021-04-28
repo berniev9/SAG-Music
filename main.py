@@ -16,10 +16,7 @@ from SpotGas import *
 def main():
 
     cur, conn = setUpDatabase('GAS_MEDIA.db')
-    # cur.execute("DROP TABLE IF EXISTS Billboard")
-    # cur.execute("DROP TABLE IF EXISTS Shazam_Data")
-    # cur.execute("DROP TABLE IF EXISTS Shazam_calculated_data")
-    # cur.execute("DROP TABLE IF EXISTS Spotify")
+    
 
     
     #Billboard 
