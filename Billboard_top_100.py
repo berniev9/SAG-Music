@@ -54,7 +54,7 @@ def billboard_table(year, month, day, db_name):
 
     i = 0
 
-    #Bernies solution for entering 25 at a time
+ 
     start_id = None
     cur.execute('SELECT max(rank) FROM Billboard')
     try:
@@ -70,10 +70,6 @@ def billboard_table(year, month, day, db_name):
 
 
     for item in billboard_data[start_id:]:
-        #cur.execute(f"SELECT Song FROM Billboard")
-        #rows = cur.fetchall()
-        #song = item[1]
-        #if song not in rows:
         cur.execute("INSERT INTO Billboard (Rank, Song, Artist, Previous_Rank, Peak_Rank, Weeks_on_Charts) VALUES (?,?,?,?,?,?)",(item[0],item[1].upper(),item[2],item[3], item[4], item[5]))
         i +=1
         conn.commit()
