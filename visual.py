@@ -31,7 +31,6 @@ def grabs_shazam_data(cur, conn):
             new_dic[song[3]]+=1
 
     data = sorted(new_dic.items(),key= lambda t: t[1], reverse=True)
-    print(data)
     return data
 
 # Creates the main shazam visual
@@ -94,6 +93,8 @@ def creates_shazam_2nd_visual(values, ranks):
 
     fig.savefig('Shazam_visual.png')
 
+    plt.show()
+
 def create_shazam_artist_table(keys,ranks, values):
     fig = go.Figure(data=[go.Table(header=dict(values=['Rank', 'Artist', "Frequency"]),
                  cells=dict(values=[ranks, keys,values]))
@@ -132,8 +133,8 @@ def main():
     frequency_count = grabs_shazam_data(cur, conn)
     create_shazam_visual(frequency_count)
     create_shazam_artist_table(key_list, rank_list, value_list)
-    creates_shazam_2nd_visual(value_list, rank_list)
     billboardvisual(cur, conn)
+    creates_shazam_2nd_visual(value_list, rank_list)
 
 
 if __name__ == "__main__":

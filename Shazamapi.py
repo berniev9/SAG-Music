@@ -3,14 +3,15 @@ import json
 import sqlite3			
 import os
 import unittest
-
+from Billboard_top_100 import * 
+from SpotGas import *
 
 # Creates a connection to the given database file
-def setUpDatabase(db_name):
-    path = os.path.dirname(os.path.abspath(__file__))
-    conn = sqlite3.connect(path+'/'+db_name)
-    cur = conn.cursor()
-    return cur, conn
+# def setUpDatabase(db_name):
+#     path = os.path.dirname(os.path.abspath(__file__))
+#     conn = sqlite3.connect(path+'/'+db_name)
+#     cur = conn.cursor()
+#     return cur, conn
 
 
 #Functions Grabs the top 100 track that have been Shazamed this week
@@ -175,23 +176,23 @@ def create_calculate_shazam_table(cur,conn, dictionary, US_top100):
 
 
 
-def main():
-    #Goes through api to create a list of tuples that includes (song, list of artists, Rank on the Shazam board)
-    US_100mostshazam_songs = top_100_songs('US')
-    # Creates a list of tuples that includes the individual artist name the amount of times they appear on the top 100 shazamed songs
-    artist_rank = get_count_artists_appear(US_100mostshazam_songs)
-    # Creates a dict that holds the artist name as the key and the frequency as the value
-    frequency = calculate_artist_frequency(artist_rank)
-    # Creates a connection to the databse 
-    cur, conn = setUpDatabase('GAS_MEDIA.db')
-    # Adds API info onto the database
-    create_Shazam_table(cur, conn,US_100mostshazam_songs)
-    # Adds calculated info onto the database
-    create_calculate_shazam_table(cur,conn, frequency, US_100mostshazam_songs)
+# def main():
+#     #Goes through api to create a list of tuples that includes (song, list of artists, Rank on the Shazam board)
+#     US_100mostshazam_songs = top_100_songs('US')
+#     # Creates a list of tuples that includes the individual artist name the amount of times they appear on the top 100 shazamed songs
+#     artist_rank = get_count_artists_appear(US_100mostshazam_songs)
+#     # Creates a dict that holds the artist name as the key and the frequency as the value
+#     frequency = calculate_artist_frequency(artist_rank)
+#     # Creates a connection to the databse 
+#     cur, conn = setUpDatabase('GAS_MEDIA.db')
+#     # Adds API info onto the database
+#     create_Shazam_table(cur, conn,US_100mostshazam_songs)
+#     # Adds calculated info onto the database
+#     create_calculate_shazam_table(cur,conn, frequency, US_100mostshazam_songs)
 
 
 
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
