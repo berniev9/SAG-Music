@@ -19,7 +19,7 @@ client_credentials_manager)
 
 
 
-def create_Spotify_table(cur, conn): #needs adjustments - data is based off a for loop that calls combinedata() for each song in Jacob's top 100
+def create_Spotify_table(cur, conn):
     cur.execute('CREATE TABLE IF NOT EXISTS Spotify (Rank INTEGER, Song TEXT, Artist TEXT, Popularity INTEGER, Popularity_Status INTEGER)') #Popularity Status is 1-4 and synonymous with __calculatedbreakout__ in doc plan
     conn.commit()
 
