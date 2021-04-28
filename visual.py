@@ -116,13 +116,35 @@ def billboardvisual(cur, conn):
         previous.append(row[1])
         weeks.append(row[2])
     previous = [0 if i=='-' else i for i in previous]
-    fig=plt.figure()
-    ax = fig.add_subplot(projection='3d')
-    ax.scatter(rank, previous, weeks, zdir='z', s=20, c=None, depthshade=True)
-    ax.set_xlabel('Rank')
-    ax.set_ylabel('Previous Rank')
-    ax.set_zlabel('Weeks on Chart')
+    fig2=plt.figure()
+    ax2 = fig2.add_subplot(projection='3d')
+    ax2.scatter(rank, previous, weeks, zdir='z', s=20, c=None, depthshade=True)
+    ax2.set_xlabel('Rank')
+    ax2.set_ylabel('Previous Rank')
+    ax2.set_zlabel('Weeks on Chart')
+    ax2.set_title('Change in Ranking VS. Weeks on Charts')
     
+    fig3 = plt.figure()
+    ax3 = fig3.add_subplot()
+    ax3.scatter(rank, previous, c = 'r')
+    ax3.set_xlabel('Rank')
+    ax3.set_ylabel('Previous Rank')
+    ax3.set_title('Current Rank VS. Previous Rank')
+    
+
+    fig4 = plt.figure()
+    ax4 = fig4.add_subplot()
+    ax4.scatter(rank, weeks, c = 'g')
+    ax4.set_xlabel('Rank')
+    ax4.set_ylabel('Weeks on Charts')
+    ax4.set_title('Current Ranking VS. Weeks on Charts')
+
+    fig5 = plt.figure()
+    ax5 = fig5.add_subplot()
+    ax5.scatter(previous, weeks, c = 'b')
+    ax5.set_xlabel('Previous Rank')
+    ax5.set_ylabel('Weeks on Charts')
+    ax5.set_title('Previous Rank VS. Weeks on Charts')
     plt.show()
     
 
