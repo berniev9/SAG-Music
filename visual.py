@@ -60,8 +60,8 @@ def create_shazam_visual(data):
                 textposition='auto',
             )],layout=layout1)
 
-    path = os.path.dirname(os.path.abspath(__file__))
-    fig.write_image(os.path.join(path, "Shazam_visual.png")) 
+    #path = os.path.dirname(os.path.abspath(__file__))
+    #fig.write_image(os.path.join(path, "Shazam_visual.png")) 
     fig.show()
 
 
